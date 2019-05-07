@@ -1,0 +1,33 @@
+﻿using System.IO;
+using UnityEngine;
+
+
+    public class Utils : MonoBehaviour
+    {
+        private static byte[] GetBytesFile(Stream responseStream)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = responseStream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+
+                return ms.ToArray();
+            }
+        }
+
+        public static void ConvertBytesForFile(Stream responseStream, string pathOutputFile = "C:/", string fileNameWithExtesion = "file.txt")
+        {
+            var bytesFile = GetBytesFile(responseStream);
+            File.WriteAllBytes(string.Format("{0}{1}", pathOutputFile, fileNameWithExtesion), bytesFile);
+            Debug.Log("Wrote!");
+        }
+
+        public static void ConvertBytesForFile(byte[] bytesFile, string pathOutputFile = "C:/", string fileNameWithExtesion = "file.txt")
+        {
+            File.WriteAllBytes(string.Format("{0}{1}", pathOutputFile, fileNameWithExtesion), bytesFile);
+        }
+    }
